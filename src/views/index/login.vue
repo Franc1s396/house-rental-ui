@@ -21,6 +21,7 @@
 
 <script>
 import Cookies from "js-cookie";
+import {Message} from "element-ui";
 export default {
   name: "login",
   data() {
@@ -60,9 +61,7 @@ export default {
           }
           // 登录
           this.$store.dispatch('passLogin', this.passLoginForm).then(() => {
-            // 重定向到首页
-            this.$router.replace('/').catch(() => {
-            })
+            this.$router.push('/index');
           }).catch(() => {
             this.loading = false;
           })

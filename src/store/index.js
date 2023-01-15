@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import {passLogin, getUserInfo, logout} from "@/api/login";
 import {getToken, removeToken, setToken} from "@/utils/auth";
+import {Message} from "element-ui";
 
 Vue.use(Vuex)
 
@@ -31,10 +32,9 @@ export default new Vuex.Store({
         passLogin({commit,state}, userInfo) {
             const username = userInfo.username.trim()
             const password = userInfo.password
-            // const code = userInfo.code
-            // const uuid = userInfo.uuid
             return new Promise((resolve, reject) => {
                 passLogin(username, password).then(res => {
+                    Message.success('登录成功')
                     setToken(res.data.token)
                     commit('SET_TOKEN', res.data.token)
                     resolve()
@@ -47,11 +47,8 @@ export default new Vuex.Store({
             return new Promise((resolve, reject) => {
                 getUserInfo().then(resp => {
                     const user = resp.data;
-                    console.log(user);
                     commit('SET_NAME', user.nickname)
                     commit('SET_AVATAR', user.avatarUrl)
-                    console.log(state.name);
-                    console.log(state.avatar);
                     resolve(resp)
                 }).catch(error => {
                     reject(error)
@@ -61,7 +58,7 @@ export default new Vuex.Store({
         logout({commit, state}) {
             return new Promise((resolve, reject) => {
                 logout().then(resp => {
-                    commit('SET_TOKEN', '')
+                    commit('SET_TOKEN', undefined)
                     removeToken()
                     resolve()
                 }).catch(error=>{

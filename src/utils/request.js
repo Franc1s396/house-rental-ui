@@ -4,6 +4,8 @@ import {getToken} from "@/utils/auth";
 import {tansParams,blobValidate} from "@/utils/rental";
 import errorCode from "@/utils/errorCode";
 import saveAs from "file-saver"
+import router from "@/router";
+import store from "@/store";
 
 let downloadLoadingInstance;
 
@@ -56,7 +58,7 @@ service.interceptors.response.use(res => {
         // 401响应码则跳转到登录页面
         if (code === 401) {
             store.dispatch('logout').then(() => {
-                location.href = '/index';
+                router.push('/login')
             })
         } else if (code === 500) {
             Message({

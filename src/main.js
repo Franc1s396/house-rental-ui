@@ -5,19 +5,23 @@ import store from './store'
 import Element, {Message} from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css';
 import {download} from "@/utils/request";
+import 'vue-area-linkage/dist/index.css'; // v2 or higher
+import VueAreaLinkage from 'vue-area-linkage';
 
 Vue.config.productionTip = false
 Vue.prototype.download = download
 
 Vue.use(Element)
+Vue.use(VueAreaLinkage)
 
 router.beforeEach((to, from, next) => {
-    // 在进入登录页面时判断是否已经登录 如果已经登录就跳转到首页
-    if (to.path === '/login') {
-        if (store.getters.token !== undefined) {
+    if (to.path === '/') {
+        next('/index');
+    }else if (to.path === '/login') {
+        if (store.state.token !== undefined) {
             Message.error('您已登录!')
-            next('/');
-        }else {
+            next('/index');
+        } else {
             next();
         }
     } else {

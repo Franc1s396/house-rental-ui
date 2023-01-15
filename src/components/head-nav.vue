@@ -18,37 +18,31 @@
         />
       </div>
       <el-menu
-          :default-active="activeIndex"
           class="el-menu-demo"
           mode="horizontal"
           style="margin-right: 10px"
           @select="handleSelect"
           text-color="#000000">
-
-        <el-menu-item index="1">首页</el-menu-item>
-        <el-submenu index="2">
-          <template slot="title">城市</template>
-          <el-menu-item index="2-1">北京</el-menu-item>
-          <el-menu-item index="2-2">上海</el-menu-item>
-          <el-menu-item index="2-3">广州</el-menu-item>
-        </el-submenu>
-        <el-menu-item index="3">租房</el-menu-item>
+        <el-menu-item @click="indexRoute">首页</el-menu-item>
       </el-menu>
       <div v-if="!isLogin" class="header_right">
-        <span style="color: black;font-size: 14px" @click="goLogin">
-          登录/注册</span>
+        <el-button style="color: black;font-size: 14px" @click="goLogin">
+          登录/注册
+        </el-button>
       </div>
       <div v-else class="header_right">
         <el-avatar
-            :size="50"
+            shape="square"
+            :size="45"
             :src="userInfo.avatarUrl"
             style="margin: 0 15px"
         ></el-avatar>
-        <el-dropdown class="userInfo">
+        <el-dropdown class="userInfo" @command="handleCommand">
           <span class="el-dropdown-link">{{ userInfo.nickname }}</span>
+          <i class="el-icon-arrow-down el-icon--right"></i>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="userinfo">资料管理</el-dropdown-item>
-            <el-dropdown-item command="setting">房源发布</el-dropdown-item>
+            <el-dropdown-item command="userInfo">资料管理</el-dropdown-item>
+            <el-dropdown-item command="createHouse">房源发布</el-dropdown-item>
             <el-dropdown-item command="logout" divided>注销登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -59,6 +53,7 @@
 
 <script>
 import store from "@/store";
+import {Message} from "element-ui";
 
 export default {
   name: "head-nav",
@@ -69,12 +64,13 @@ export default {
         avatarUrl: '',
       },
       isLogin: false,
-      activeIndex: '1',
     }
   },
   methods: {
+    indexRoute() {
+      this.$router.push('/index');
+    },
     handleSelect(key, keyPath) {
-      console.log(key, keyPath);
     },
     getUserInfo() {
       if (store.getters.token !== undefined) {
@@ -86,8 +82,30 @@ export default {
       }
     },
     goLogin() {
-      return this.$router.replace('login')
+      return this.$router.push('/login')
     },
+    handleCommand(command) {
+      if (command==='userInfo'){
+        this.$router.push('/home/user/info');
+      } else if (command === 'logout') {
+        this.$confirm('您确定要注销登录吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          store.dispatch('logout').then(resp => {
+            Message.success('退出成功')
+            this.$router.go(0);
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
+
+      }
+    }
   },
   mounted() {
     this.getUserInfo()
@@ -117,4 +135,9 @@ export default {
     }
   }
 }
+
+.el-dropdown-link {
+  cursor: pointer;
+}
+
 </style>

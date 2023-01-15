@@ -7,3 +7,10 @@ export function findHousePage(queryParams) {
         params: queryParams
     })
 }
+
+export function houseInfo(houseId) {
+    return request({
+        url: '/house/info/'+houseId,
+        method: 'get',
+    })
+}

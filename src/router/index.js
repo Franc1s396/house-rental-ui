@@ -1,33 +1,60 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import index from "@/views/index";
-import login from "@/views/index/login";
-import house from "@/views/house/house";
+import Index from "@/views/index";
+import Login from "@/views/index/login";
+import House from "@/views/house/house";
+import HouseInfo from "@/views/house/house-info";
+import Home from "@/views/index/home";
+import User from "@/views/user/user";
+import PassChange from "@/views/user/pass-change";
 
 Vue.use(VueRouter)
 
 const routes = [
-  {
-    path: '/',
-    name: 'index',
-    component: index,
-    children:[
-      {
-        path:'/',
-        name:'house',
-        component:house
-      }
-    ]
-  },
-  {
-    path: '/login',
-    name: 'login',
-    component: login
-  }
+    {
+        path: '/index',
+        name: 'index',
+        component: Index,
+        children: [
+            {
+                path: '/index',
+                name: 'house',
+                component: House
+            },
+            {
+                path: '/house/info',
+                name: 'house-info',
+                component: HouseInfo
+            },
+            {
+                path: '/home',
+                name: 'home',
+                component: Home,
+                children: [
+                    {
+                        path: '/home/user/info',
+                        name: 'user-info',
+                        component: User
+                    },
+                    {
+                        path: '/home/user/pass',
+                        name:'pass-change',
+                        component: PassChange
+                    }
+                ]
+            },
+            {
+                path: '/login',
+                name: 'login',
+                component: Login
+            }
+        ]
+    },
+
 ]
 
 const router = new VueRouter({
-  routes
+    routes
 })
 
 export default router
