@@ -12,7 +12,6 @@
       <el-form-item prop="password">
         <el-input type="password" v-model="passLoginForm.password" auto-complete="off" placeholder="请输入用户密码"></el-input>
       </el-form-item>
-      <el-checkbox class="loginRemember" v-model="rememberMe">记住我</el-checkbox>
       <el-button type="primary" style="width: 100%;margin-top: 15px" @click="submitLogin">登录</el-button>
       <p style="font-size: 10px;margin-top: 30px">登录即表示您同意 《服务协议》 《隐私权政策》</p>
     </el-form>
@@ -21,7 +20,6 @@
 
 <script>
 import Cookies from "js-cookie";
-import {Message} from "element-ui";
 export default {
   name: "login",
   data() {
@@ -48,17 +46,6 @@ export default {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.loading = true;
-          // 记住我功能
-          if (this.passLoginForm.rememberMe) {
-            Cookies.set("username", this.passLoginForm.username, {expires: 30});
-            //TODO 密码加密
-            Cookies.set("password", this.passLoginForm.password, {expires: 30});
-            Cookies.set('rememberMe', this.passLoginForm.rememberMe, {expires: 30});
-          } else {
-            Cookies.remove("username");
-            Cookies.remove("password");
-            Cookies.remove('rememberMe');
-          }
           // 登录
           this.$store.dispatch('passLogin', this.passLoginForm).then(() => {
             this.$router.push('/index');
@@ -74,7 +61,6 @@ export default {
       const rememberMe = Cookies.get('rememberMe')
       this.passLoginForm = {
         username: username === undefined ? this.passLoginForm.username : username,
-        //TODO 密码加密
         password: password === undefined ? this.passLoginForm.password : password,
         rememberMe: rememberMe === undefined ? false : Boolean(rememberMe)
       };

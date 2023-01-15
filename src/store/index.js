@@ -35,8 +35,9 @@ export default new Vuex.Store({
             return new Promise((resolve, reject) => {
                 passLogin(username, password).then(res => {
                     Message.success('登录成功')
-                    setToken(res.data.token)
-                    commit('SET_TOKEN', res.data.token)
+                    let token="Bearer"+res.data.token;
+                    setToken(token)
+                    commit('SET_TOKEN', token)
                     resolve()
                 }).catch(error => {
                     reject(error)

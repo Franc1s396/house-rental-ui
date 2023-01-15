@@ -160,11 +160,6 @@ export default {
       this.userInfoFormVisible = false;
     },
     updateSubmit() {
-      if (this.userInfoForm.sex === '男性') {
-        this.userInfoForm.sex = 1;
-      } else {
-        this.userInfoForm.sex = 0;
-      }
       this.$confirm('修改个人资料需要重新登录,您确定要修改吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
