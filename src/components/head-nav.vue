@@ -95,6 +95,7 @@ export default {
         }).then(() => {
           store.dispatch('logout').then(resp => {
             Message.success('退出成功')
+            this.$router.push('/index');
             this.$router.go(0);
           })
         }).catch(() => {

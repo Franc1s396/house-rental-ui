@@ -10,6 +10,7 @@
     "area-data": "^5.0.6",
     "axios": "^0.24.0",
     "core-js": "^3.8.3",
+    "element-china-area-data": "^5.0.2",
     "element-ui": "^2.15.6",
     "file-saver": "^2.0.5",
     "font-awesome": "^4.7.0",

@@ -116,8 +116,8 @@
           style="margin-top: 15px"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page="queryParams.pageNo"
-          :page-size="queryParams.pageSize"
+          :current-page="queryParams.page"
+          :page-size="queryParams.limit"
           layout="total, prev, pager, next, jumper"
           :total="total">
       </el-pagination>
@@ -134,8 +134,8 @@ export default {
   data() {
     return {
       queryParams: {
-        pageNo: 1,
-        pageSize: 10,
+        page: 1,
+        limit: 10,
         keyword: '',
         city: '',
         district: '',
@@ -162,14 +162,15 @@ export default {
   },
   methods: {
     handleSizeChange(val) {
-      this.queryParams.pageSize = val;
+      this.queryParams.limit = val;
     },
     handleCurrentChange(val) {
-      this.queryParams.pageNo = val;
+      this.queryParams.page = val;
     },
     getHousePage() {
       this.loading = true;
       findHousePage(this.queryParams).then(resp => {
+        console.log(resp);
         this.houseList = resp.data.records;
         this.total = resp.data.total;
         this.loading = false;

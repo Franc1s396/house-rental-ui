@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div v-loading="loading">
     <el-card
         class="box-card">
       <div style="float: left;width: 200px;margin-top: 30px;margin-left: 20px">
         <el-upload
             class="avatar-uploader"
-            action="/user/avatar"
+            action="/users/avatar"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             accept="image/jpg,image/jpeg,image/png"
@@ -33,7 +33,7 @@
         </div>
         <div class="user-info-text" style="display: inline-block">
           <span class="font-key">性别:</span>
-          <el-tag style="margin-left: 80px"> {{ user.sex }}</el-tag>
+          <el-tag style="margin-left: 80px"> {{ user.sex.name }}</el-tag>
         </div>
         <div class="user-info-text">
           <span class="font-key">意向城市:</span>
@@ -49,11 +49,11 @@
         </div>
         <div class="user-info-text" style="display: inline-block">
           <span class="font-key">认证状态:</span>
-          <el-tag v-if="user.identityStatus==='已认证'" type="primary" style="margin-left: 50px"> {{
-              user.identityStatus
+          <el-tag v-if="user.identityStatus.name==='已认证'" type="primary" style="margin-left: 50px"> {{
+              user.identityStatus.name
             }}
           </el-tag>
-          <el-tag v-else type="danger" style="margin-left: 50px"> {{ user.identityStatus }}</el-tag>
+          <el-tag v-else type="danger" style="margin-left: 50px"> {{ user.identityStatus.name }}</el-tag>
         </div>
       </div>
       <div style="text-align: left;margin-top: 10px">
@@ -84,18 +84,25 @@
           </el-form-item>
           <el-form-item label="用户性别">
             <el-select v-model="userInfoForm.sex">
-              <el-option label="男性" value="1"></el-option>
-              <el-option label="女性" value="0"></el-option>
+              <el-option label="男性" :value="1"></el-option>
+              <el-option label="女性" :value="0"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="意向城市">
-            <area-cascader type="text"
-                           class="area"
-                           v-model="selected"
-                           placeholder="城市"
-                           :data="pca"
-                           @change="handleCityChange"/>
+          <el-form-item style="width: 350px" label="意向城市" prop="intendedCity">
+            <el-select v-model="userInfoForm.intendedCity" placeholder="城市">
+              <el-option label="北京" value="北京"></el-option>
+              <el-option label="上海" value="上海"></el-option>
+              <el-option label="广州" value="广州"></el-option>
+              <el-option label="深圳" value="深圳"></el-option>
+              <el-option label="杭州" value="杭州"></el-option>
+              <el-option label="武汉" value="武汉"></el-option>
+              <el-option label="长沙" value="长沙"></el-option>
+              <el-option label="大连" value="大连"></el-option>
+              <el-option label="厦门" value="厦门"></el-option>
+              <el-option label="南京" value="南京"></el-option>
+            </el-select>
           </el-form-item>
+
           <el-form-item label="个性签名">
             <el-input type="textarea" :rows="6" v-model="userInfoForm.remark"></el-input>
           </el-form-item>
@@ -114,7 +121,6 @@
 import store from "@/store";
 import {Message} from "element-ui";
 import {updateUser} from "@/api/user";
-import {pca} from "area-data";
 
 export default {
   name: "user",
@@ -131,8 +137,6 @@ export default {
         remark: ''
       },
       userInfoFormVisible: false,
-      pca: pca,
-      selected: [],
       loading: false,
     }
   },
@@ -149,10 +153,9 @@ export default {
     },
     handleUpdate() {
       this.userInfoForm.nickname = this.user.nickname;
-      this.userInfoForm.sex = this.user.sex;
+      this.userInfoForm.intendedCity=this.user.intendedCity;
+      this.userInfoForm.sex = this.user.sex.code;
       this.userInfoForm.remark = this.user.remark;
-      this.selected[0] = '';
-      this.selected[1] = this.user.intendedCity;
       this.userInfoFormVisible = true;
     },
     handleCancel() {
@@ -177,16 +180,6 @@ export default {
           message: '已取消修改'
         });
       });
-    },
-    handleCityChange(val) {
-      if (val[0] === '北京市'
-          || val[0] === '天津市'
-          || val[0] === '重庆市'
-          || val[0] === '上海市') {
-        this.userInfoForm.intendedCity = val[0];
-      } else {
-        this.userInfoForm.intendedCity = val[1];
-      }
     }
   },
   mounted() {
@@ -195,7 +188,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .box-card {
   width: 700px;
   display: inline-block;
@@ -220,4 +213,27 @@ export default {
   display: inline;
 }
 
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
 </style>

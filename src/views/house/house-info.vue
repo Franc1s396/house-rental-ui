@@ -15,7 +15,7 @@
         </span>
         元/月
         </span>
-          <span style="margin-left: 5px">({{ house.depositType }})</span>
+          <span style="margin-left: 5px">({{ house.depositType.name }})</span>
         </div>
 
         <div class="house-info-first">
@@ -76,62 +76,132 @@
     </div>
 
     <div class="house-second">
-
-      <div style="float: left;width: 60%;text-align: left;border-right: 1px solid #F3F3F3;">
-        <div style="margin-bottom: 20px">
-          <h1>房源简介</h1>
-          {{ house.info }}
-        </div>
-        <div v-for="photo in housePhotos">
-          <img style="width:  600px" :src="photo"/>
-        </div>
-      </div>
-
-      <div style="width: 300px;float: right;
-    min-height: 250px;
-    margin-right: 15%;
-    padding-bottom: 10px;">
-        <el-card class="box-card">
-          <div slot="header" style="text-align: left">
-            <span>房东</span>
+      <el-row>
+        <el-col :span="13" style="border-right: 1px solid #F3F3F3;text-align: left">
+          <div style="margin-bottom: 20px">
+            <h1 style="">房源简介</h1>
+            {{ house.info }}
           </div>
-          <div class="landlord-avatar">
-            <el-avatar :size="70" :src="landlord.avatarUrl"/>
+          <div v-for="photo in housePhotos">
+            <img style="width:  600px" :src="photo.url"/>
           </div>
-          <div class="landlord-name">
-            {{ landlord.identityName }}
-          </div>
+        </el-col>
+        <el-col :span="9">
           <div>
-            <p>
-              <i class="el-icon-phone"></i>
-              {{ landlord.phone }}</p>
-          </div>
-        </el-card>
-      </div>
+            <el-card class="box-card">
+              <div slot="header" style="text-align: left">
+                <span>房东</span>
+              </div>
+              <div class="landlord-avatar">
+                <el-avatar :size="70" :src="landlord.avatarUrl"/>
+              </div>
+              <div class="landlord-name">
+                {{ landlord.identityName }}
+              </div>
+              <div style="width: 100%;border-bottom: 1px solid #EBEEF5;">
+                <p>
+                  <i class="el-icon-phone"></i>
+                  {{ landlord.phone }}</p>
+              </div>
+              <div style="margin-top: 20px;">
+                <el-button type="primary" @click="rentDialogVisible=true">预定租房</el-button>
+              </div>
+              <div>
+                <el-dialog title="选择租房月份" :visible.sync="rentDialogVisible">
+                  <div>
+                    <el-form
+                        v-model="rentForm"
+                        :rules="rules">
+                      <el-form-item label="起租时间" prop="beginDate">
+                        <el-date-picker
+                            v-model="rentForm.beginDate"
+                            type="date"
+                            value-format="yyyy-MM-dd"
+                            :picker-options="pickerOptions"
+                            placeholder="选择起租时间">
+                        </el-date-picker>
+                      </el-form-item>
+                      <el-form-item label="租房月数" prop="months">
+                        <el-input-number size="small" v-model="rentForm.months" :min="3" :max="99"></el-input-number>
+                      </el-form-item>
+                    </el-form>
+                  </div>
+                  <div slot="footer" class="dialog-footer">
+                    <el-button @click="handleCancel">取 消</el-button>
+                    <el-button type="primary" @click="handleSuccess">确 定</el-button>
+                  </div>
+                </el-dialog>
 
+              </div>
+            </el-card>
+          </div>
+        </el-col>
+      </el-row>
     </div>
   </div>
 </template>
 
 <script>
 import {houseInfo} from "@/api/house";
+import {createOrder} from "@/api/order";
 
 export default {
   name: "house-info",
   data() {
     return {
-      houseId: this.$route.query.houseId,
-      house: {},
+      house: {
+        depositType: {name: '', code: null}
+      },
       landlord: {},
       housePhotos: [],
-      loading: false
+      loading: false,
+      rentDialogVisible: false,
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() < Date.now() - 24 * 60 * 60 * 1000;
+        },
+      },
+      rentForm: {
+        houseId: this.$route.query.houseId,
+        beginDate: '',
+        months: 3,
+      },
+      rules: {
+        // beginDate: [{required: true, message: '请选择起租时间', trigger: 'blur'}],
+        // months: [{required: true, message: '请输入租房月数', trigger: 'blur'}],
+      }
     }
   },
   methods: {
+    handleCancel() {
+      this.rentDialogVisible = false;
+      this.rentForm = {
+        houseId: this.$route.query.houseId,
+        beginDate: '',
+        months: 3
+      }
+    },
+    handleSuccess() {
+          this.$confirm('您确定要创建订单吗?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            createOrder(this.rentForm).then(resp => {
+              this.$message.success('租房预定成功!');
+              this.$router.go(0);
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消创建'
+            });
+          });
+    },
     getHouseInfo() {
-      this.loading=true
-      houseInfo(this.houseId).then(resp => {
-        this.loading=false;
+      this.loading = true
+      houseInfo(this.rentForm.houseId).then(resp => {
+        this.loading = false;
         this.house = resp.data.house;
         this.landlord = resp.data.houseUserVO;
         this.housePhotos = resp.data.photoUrlList;
@@ -154,7 +224,6 @@ export default {
 }
 
 .house-second {
-  width: 100%;
 }
 
 .house-title {
@@ -223,5 +292,9 @@ export default {
 
 .landlord-name {
   margin-top: 5px;
+}
+
+.box-card {
+  width: 400px;
 }
 </style>

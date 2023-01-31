@@ -22,7 +22,7 @@ export function passLogin(username, password){
 
 export function getUserInfo(){
     return request({
-        url:'/user/info',
+        url:'/users/info',
         method:'get'
     })
 }
