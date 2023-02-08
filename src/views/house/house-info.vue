@@ -70,6 +70,11 @@
         <div class="house-info-second">
           <div class="font" style="float: left">地&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;址</div>
           <div style="margin-left: 100px">{{ house.address }}</div>
+          <div>
+            <vue-star animate="animated rubberBand" color="#black">
+              <a slot="icon" class="fa fa-heart"></a>
+            </vue-star>
+          </div>
         </div>
 
       </div>

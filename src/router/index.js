@@ -15,6 +15,8 @@ import LandlordBill from "@/views/bill/landlord-bill";
 import RentableOrder from "@/views/order/rentable-order";
 import HouseList from "@/views/house/house-list";
 import HouseDetails from "@/views/house/house-details";
+import Register from "@/views/index/register";
+import PayLog from "@/views/pay/pay-log";
 
 Vue.use(VueRouter)
 
@@ -84,6 +86,11 @@ const routes = [
                         name: 'house-details',
                         component: HouseDetails
                     },
+                    {
+                        path: '/home/pay-log',
+                        name: 'pay-log',
+                        component: PayLog
+                    }
                 ]
             },
 
@@ -93,6 +100,11 @@ const routes = [
         path: '/login',
         name: 'login',
         component: Login
+    },
+    {
+        path: '/register',
+        name: 'register',
+        component: Register
     },
     {
         path: '/order/contract',

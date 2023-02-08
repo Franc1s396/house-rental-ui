@@ -102,12 +102,12 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-                    <el-form-item label="押付类型" prop="depositType">
-                      <el-select v-model="form.depositType" placeholder="请选择押付类型">
-                        <el-option label="押一付一" :value="0"></el-option>
-                        <el-option label="押二付一" :value="1"></el-option>
-                      </el-select>
-                    </el-form-item>
+          <el-form-item label="押付类型" prop="depositType">
+            <el-select v-model="form.depositType" placeholder="请选择押付类型">
+              <el-option label="押一付一" :value="0"></el-option>
+              <el-option label="押二付一" :value="1"></el-option>
+            </el-select>
+          </el-form-item>
         </el-col>
       </el-row>
       <el-form-item label="简介描述" prop="info">
@@ -121,11 +121,12 @@
               :file-list="form.photoUrlList"
               :on-success="handleUploadFilesSuccess"
               :on-remove="handleRemove"
+              :before-upload="handleBeforeUpload"
               :headers="headers"
               :limit="9"
               list-type="picture">
             <el-button size="small" type="primary">点击上传</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过3mb</div>
           </el-upload>
         </div>
       </el-form-item>
@@ -143,7 +144,7 @@ export default {
   data() {
     return {
       houseId: this.$route.query.houseId,
-      loading:false,
+      loading: false,
       form: {
         id: null,
         name: '',
@@ -209,6 +210,20 @@ export default {
     handleCancel() {
       this.$router.replace('/home/house');
     },
+    handleBeforeUpload(file) {
+      let types = ['image/jpeg', 'image/jpg', 'image/gif', 'image/bmp', 'image/png'];
+      const isImage = types.includes(file.type);
+      const isLtSize = file.size / 1024 / 1024 < 2;
+      if (!isImage) {
+        this.$message.error('上传图片只能是 JPG、JPEG、gif、bmp、PNG 格式!');
+        return false;
+      }
+      if (!isLtSize) {
+        this.$message.error('上传图片大小不能超过 2MB!');
+        return false;
+      }
+      return true;
+    },
     handleSubmit() {
       this.spliceLayout();
       this.$confirm('您确定要提交吗?', '提示', {
@@ -224,7 +239,7 @@ export default {
                 this.loading = false;
                 this.$message.success("更新成功");
                 this.$router.replace('/home/house');
-              }).catch(error=>{
+              }).catch(error => {
                 this.loading = false;
               })
             } else {
@@ -232,7 +247,7 @@ export default {
                 this.loading = false;
                 this.$message.success("创建成功");
                 this.$router.replace('/home/house');
-              }).catch(error=>{
+              }).catch(error => {
                 this.loading = false;
               })
             }
@@ -250,11 +265,11 @@ export default {
     },
     getHouseDetails() {
       if (this.houseId != null) {
-        this.loading=true;
+        this.loading = true;
         houseInfo(this.houseId).then(resp => {
-          this.loading=false;
+          this.loading = false;
           this.form = resp.data.house;
-          this.form.depositType=this.form.depositType.code;
+          this.form.depositType = this.form.depositType.code;
           this.form.photoUrlList = resp.data.photoUrlList;
           this.handleLayout();
         })

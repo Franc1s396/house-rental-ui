@@ -16,7 +16,7 @@
         <el-menu-item-group>
           <el-menu-item index="/home/order/tenant">我的订单</el-menu-item>
           <el-menu-item index="/home/bill/tenant">缴费账单</el-menu-item>
-          <el-menu-item index="/home/tenant/">支付记录</el-menu-item>
+          <el-menu-item index="/home/pay-log">支付记录</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
       <el-submenu index="3">

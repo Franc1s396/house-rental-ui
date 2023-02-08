@@ -1,13 +1,21 @@
 <template>
   <div>
     <div class="house-input">
-      <area-cascader type="text"
-                     class="area"
-                     v-model="selected"
-                     placeholder="城市"
-                     style="float: left"
-                     :data="pca"
-                     @change="handleCityChange"/>
+      <el-select
+          v-model="queryParams.city"
+          @change="handleCityChange"
+          placeholder="城市">
+        <el-option label="北京" value="北京"></el-option>
+        <el-option label="上海" value="上海"></el-option>
+        <el-option label="广州" value="广州"></el-option>
+        <el-option label="深圳" value="深圳"></el-option>
+        <el-option label="杭州" value="杭州"></el-option>
+        <el-option label="武汉" value="武汉"></el-option>
+        <el-option label="长沙" value="长沙"></el-option>
+        <el-option label="大连" value="大连"></el-option>
+        <el-option label="厦门" value="厦门"></el-option>
+        <el-option label="南京" value="南京"></el-option>
+      </el-select>
       <el-input style="width: 100%;margin-left: 10px" placeholder="请输入关键字" v-model="queryParams.keyword">
         <template slot="append">
           <el-button
@@ -16,6 +24,11 @@
           </el-button>
         </template>
       </el-input>
+      <el-button
+          style="margin-left: 10px"
+          type="info"
+          @click="handleReset">重置
+      </el-button>
     </div>
 
 
@@ -127,7 +140,6 @@
 
 <script>
 import {findHousePage} from "@/api/house";
-import {pca, pcaa} from 'area-data'
 
 export default {
   name: "house-page",
@@ -138,20 +150,16 @@ export default {
         limit: 10,
         keyword: '',
         city: '',
-        district: '',
         minRent: null,
         maxRent: null,
         rentParam: '',
         minArea: null,
         maxArea: null,
         areaParam: '',
-        depositType: null,
       },
       houseList: [],
       total: 0,
       loading: false,
-      selected: [],
-      pca: pca,
       queryRent: [
         '1000元以下', '1000~2000元', '2000~3000元', '3000~5000元', '5000~8000元', '8000元以上'
       ],
@@ -166,6 +174,24 @@ export default {
     },
     handleCurrentChange(val) {
       this.queryParams.page = val;
+    },
+    handleCityChange(val) {
+      this.getHousePage();
+    },
+    handleReset() {
+      this.queryParams = {
+        page: 1,
+        limit: 10,
+        keyword: '',
+        city: '',
+        minRent: null,
+        maxRent: null,
+        rentParam: '',
+        minArea: null,
+        maxArea: null,
+        areaParam: '',
+      };
+      this.getHousePage();
     },
     getHousePage() {
       this.loading = true;
@@ -194,22 +220,11 @@ export default {
       this.queryParams.areaParam = '';
       this.getHousePage()
     },
-    handleCityChange(val) {
-      if (val[0] === '北京市'
-          || val[0] === '天津市'
-          || val[0] === '重庆市'
-          || val[0] === '上海市') {
-        this.queryParams.city = val[0];
-      } else {
-        this.queryParams.city = val[1];
-      }
-      this.getHousePage()
-    },
     houseInfoRoute(houseId) {
       this.$router.push({
         name: 'house-info',
         query: {
-          houseId:houseId
+          houseId: houseId
         }
       })
     }
@@ -242,7 +257,7 @@ export default {
   font-weight: bold;
 }
 
-.house-title:hover{
+.house-title:hover {
   text-decoration: underline;
 }
 

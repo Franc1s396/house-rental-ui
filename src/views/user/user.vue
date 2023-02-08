@@ -59,11 +59,11 @@
       <div style="text-align: left;margin-top: 10px">
         <span class="font-key">个性签名:</span>
       </div>
-      <div style="margin-top: 7px">
+      <div style="text-align: left;margin-top: 7px">
         <span class="font-value">{{ user.remark }}</span>
       </div>
       <div style="margin: 20px 60px;float: right">
-        <el-button>身份认证</el-button>
+        <el-button @click="idFormVisible=true">身份认证</el-button>
         <el-button type="primary" @click="handleUpdate">修改资料</el-button>
       </div>
     </el-card>
@@ -112,6 +112,29 @@
           <el-button type="primary" @click="updateSubmit">确 定</el-button>
         </div>
       </el-dialog>
+
+      <el-dialog
+          title="个人资料"
+          :visible.sync="idFormVisible"
+          width="400px"
+          append-to-body
+      >
+        <el-form
+            :model="idForm"
+            label-width="80px"
+        >
+          <el-form-item label="真实姓名">
+            <el-input v-model="idForm.identityName"></el-input>
+          </el-form-item>
+          <el-form-item label="身份证号">
+            <el-input v-model="idForm.identityNo"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="idFormVisible=false">取 消</el-button>
+          <el-button type="primary" @click="identityAuth">确 定</el-button>
+        </div>
+      </el-dialog>
     </div>
 
   </div>
@@ -136,6 +159,11 @@ export default {
         intendedCity: '',
         remark: ''
       },
+      idForm: {
+        identityName: '',
+        identityNo: '',
+      },
+      idFormVisible: false,
       userInfoFormVisible: false,
       loading: false,
     }
@@ -149,11 +177,12 @@ export default {
       })
     },
     handleAvatarSuccess(res, file) {
+      this.$message.success('更新头像成功');
       this.$router.go(0);
     },
     handleUpdate() {
       this.userInfoForm.nickname = this.user.nickname;
-      this.userInfoForm.intendedCity=this.user.intendedCity;
+      this.userInfoForm.intendedCity = this.user.intendedCity;
       this.userInfoForm.sex = this.user.sex.code;
       this.userInfoForm.remark = this.user.remark;
       this.userInfoFormVisible = true;
@@ -180,6 +209,9 @@ export default {
           message: '已取消修改'
         });
       });
+    },
+    identityAuth(){
+
     }
   },
   mounted() {
@@ -220,9 +252,11 @@ export default {
   position: relative;
   overflow: hidden;
 }
+
 .avatar-uploader .el-upload:hover {
   border-color: #409EFF;
 }
+
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
@@ -231,6 +265,7 @@ export default {
   line-height: 178px;
   text-align: center;
 }
+
 .avatar {
   width: 178px;
   height: 178px;

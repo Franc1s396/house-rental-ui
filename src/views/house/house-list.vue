@@ -98,6 +98,13 @@
                 size="small">
               上架
             </el-button>
+            <el-button
+                v-else
+                @click="downShelfHouse(scope.row.id)"
+                type="text"
+                size="small">
+              下架
+            </el-button>
             <el-button @click="viewHouseDetails(scope.row.id)" type="text" size="small">查看</el-button>
             <el-button @click="removeHouse(scope.row.id)" type="text" size="small">删除</el-button>
           </template>
@@ -120,7 +127,7 @@
 
 <script>
 
-import {createHouse, findOwnHousePage, onShelfHouse, removeHouse, updateHouse} from "@/api/house";
+import {createHouse, downShelfHouse, findOwnHousePage, onShelfHouse, removeHouse, updateHouse} from "@/api/house";
 
 export default {
   name: "house-list",
@@ -172,6 +179,12 @@ export default {
         this.getHouseList();
       })
     },
+      downShelfHouse(houseId) {
+        downShelfHouse(houseId).then(resp => {
+          this.$message.success('下架成功')
+          this.getHouseList();
+        })
+      },
     getHouseList() {
       this.loading = true;
       findOwnHousePage(this.queryParams).then(resp => {
@@ -180,22 +193,22 @@ export default {
         this.loading = false;
       })
     },
-    removeHouse(houseId){
-        this.$confirm('您确定要删除该房源吗?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          removeHouse(houseId).then(resp=>{
-            this.$message.success("删除成功");
-            this.getHouseList();
-          })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消'
-          });
+    removeHouse(houseId) {
+      this.$confirm('您确定要删除该房源吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        removeHouse(houseId).then(resp => {
+          this.$message.success("删除成功");
+          this.getHouseList();
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
         });
+      });
     }
   },
   mounted() {

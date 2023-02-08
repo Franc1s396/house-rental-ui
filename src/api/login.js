@@ -5,31 +5,51 @@ import request from "@/utils/request";
 /**
  * 密码登录
  */
-export function passLogin(username, password){
-    const data={
+export function passLogin(username, password,code,uuid) {
+    const data = {
         username,
-        password
+        password,
+        code,
+        uuid
     }
     return request({
-        url:'/auth/pass',
+        url: '/auth/pass',
         headers: {
             isToken: false
         },
-        method:'post',
-        data:data
+        method: 'post',
+        data: data
     })
 }
 
-export function getUserInfo(){
+export function register(data) {
     return request({
-        url:'/users/info',
-        method:'get'
+        url: '/auth/register',
+        method: 'post',
+        data: data,
+        headers: {
+            isToken: false
+        }
     })
 }
 
-export function logout(){
+export function getUserInfo() {
     return request({
-        url:'/auth/logout',
-        method:'post'
+        url: '/users/info',
+        method: 'get'
+    })
+}
+
+export function logout() {
+    return request({
+        url: '/auth/logout',
+        method: 'post'
+    })
+}
+
+export function verifyCode() {
+    return request({
+        url: '/auth/verify-code',
+        method: 'get'
     })
 }

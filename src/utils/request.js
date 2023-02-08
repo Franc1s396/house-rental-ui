@@ -9,6 +9,7 @@ import store from "@/store";
 
 let downloadLoadingInstance;
 
+axios.defaults.baseURL='http://localhost/rental-api';
 axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
 
 const service = axios.create({
@@ -60,6 +61,7 @@ service.interceptors.response.use(res => {
             store.dispatch('logout').then(() => {
                 router.push('/login')
             })
+            return Promise.reject(new Error(msg))
         } else if (code === 500) {
             Message({
                 message: msg,

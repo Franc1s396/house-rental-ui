@@ -46,6 +46,13 @@ export function onShelfHouse(houseId) {
     })
 }
 
+export function downShelfHouse(houseId) {
+    return request({
+        url: '/houses/'+houseId+'/down-shelf',
+        method: 'put'
+    })
+}
+
 export function removeHouse(houseId) {
     return request({
         url: '/houses/' + houseId,

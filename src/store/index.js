@@ -13,7 +13,7 @@ export default new Vuex.Store({
         avatar: ''
     },
     getters: {
-        token:state =>state.token,
+        token: state => state.token,
         name: state => state.name,
         avatar: state => state.avatar,
     },
@@ -29,13 +29,15 @@ export default new Vuex.Store({
         }
     },
     actions: {
-        passLogin({commit,state}, userInfo) {
+        passLogin({commit, state}, userInfo) {
             const username = userInfo.username.trim()
             const password = userInfo.password
+            const code = userInfo.code
+            const uuid = userInfo.uuid
             return new Promise((resolve, reject) => {
-                passLogin(username, password).then(res => {
+                passLogin(username, password, code, uuid).then(res => {
                     Message.success('登录成功')
-                    let token="Bearer "+res.data.token;
+                    let token = "Bearer " + res.data.token;
                     setToken(token)
                     commit('SET_TOKEN', token)
                     resolve()
@@ -44,7 +46,7 @@ export default new Vuex.Store({
                 })
             })
         },
-        getUserInfo({commit,state}) {
+        getUserInfo({commit, state}) {
             return new Promise((resolve, reject) => {
                 getUserInfo().then(resp => {
                     const user = resp.data;
@@ -62,7 +64,7 @@ export default new Vuex.Store({
                     commit('SET_TOKEN', undefined)
                     removeToken()
                     resolve()
-                }).catch(error=>{
+                }).catch(error => {
                     reject(error)
                 })
             })
