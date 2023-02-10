@@ -63,7 +63,7 @@
         <span class="font-value">{{ user.remark }}</span>
       </div>
       <div style="margin: 20px 60px;float: right">
-        <el-button @click="idFormVisible=true">身份认证</el-button>
+        <el-button :disabled="user.identityStatus.code===1" @click="idFormVisible=true">身份认证</el-button>
         <el-button type="primary" @click="handleUpdate">修改资料</el-button>
       </div>
     </el-card>
@@ -143,7 +143,7 @@
 <script>
 import store from "@/store";
 import {Message} from "element-ui";
-import {updateUser} from "@/api/user";
+import {identityAuth, updateUser} from "@/api/user";
 
 export default {
   name: "user",
@@ -210,8 +210,12 @@ export default {
         });
       });
     },
-    identityAuth(){
-
+    identityAuth() {
+      identityAuth(this.idForm).then(resp => {
+        this.idFormVisible = false;
+        this.$message.success('认证成功');
+        this.$router.go(0);
+      })
     }
   },
   mounted() {

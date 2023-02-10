@@ -140,6 +140,7 @@
 
 <script>
 import {findHousePage} from "@/api/house";
+import {messageCount} from "@/api/support";
 
 export default {
   name: "house-page",
@@ -157,6 +158,7 @@ export default {
         maxArea: null,
         areaParam: '',
       },
+      messageCount: 0,
       houseList: [],
       total: 0,
       loading: false,

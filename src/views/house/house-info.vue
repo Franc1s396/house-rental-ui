@@ -19,7 +19,7 @@
         </div>
 
         <div class="house-info-first">
-          <el-row>
+          <el-row style="height: 100%">
             <el-col :span="12">
               <div class="house-item">
                 <div class="tt">{{ house.layout }}</div>
@@ -35,7 +35,7 @@
           </el-row>
         </div>
         <div class="house-info-first">
-          <el-row>
+          <el-row style="height: 100%">
             <el-col :span="12">
               <div class="house-item">
                 <div class="tt">{{ house.direction }}</div>
@@ -51,7 +51,7 @@
           </el-row>
         </div>
         <div class="house-info-first">
-          <el-row>
+          <el-row style="height: 100%">
             <el-col :span="12">
               <div class="house-item">
                 <div class="tt">{{ house.electricUnitPrice }}度/元</div>
@@ -70,10 +70,13 @@
         <div class="house-info-second">
           <div class="font" style="float: left">地&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;址</div>
           <div style="margin-left: 100px">{{ house.address }}</div>
-          <div>
-            <vue-star animate="animated rubberBand" color="#black">
-              <a slot="icon" class="fa fa-heart"></a>
-            </vue-star>
+          <div class="favourite-btn" @click="HandleFavourite">
+            <span style="margin-right: 5px">
+              <v-icon v-if="isFavourite" name="heart" spin/>
+              <v-icon v-else name="regular/heart" spin/>
+            </span>
+            <span>收藏</span>
+            <span>({{ house.favorites }})</span>
           </div>
         </div>
 
@@ -147,7 +150,7 @@
 </template>
 
 <script>
-import {houseInfo} from "@/api/house";
+import {houseInfo, favourite} from "@/api/house";
 import {createOrder} from "@/api/order";
 
 export default {
@@ -157,6 +160,7 @@ export default {
       house: {
         depositType: {name: '', code: null}
       },
+      isFavourite: false,
       landlord: {},
       housePhotos: [],
       loading: false,
@@ -187,21 +191,31 @@ export default {
       }
     },
     handleSuccess() {
-          this.$confirm('您确定要创建订单吗?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            createOrder(this.rentForm).then(resp => {
-              this.$message.success('租房预定成功!');
-              this.$router.go(0);
-            })
-          }).catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消创建'
-            });
-          });
+      this.$confirm('您确定要创建订单吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        createOrder(this.rentForm).then(resp => {
+          this.$message.success('租房预定成功!');
+          this.$router.go(0);
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消创建'
+        });
+      });
+    },
+    HandleFavourite() {
+      favourite(this.rentForm.houseId).then(resp => {
+        if (this.isFavourite) {
+          --this.house.favorites;
+        } else {
+          ++this.house.favorites;
+        }
+        this.isFavourite = !this.isFavourite;
+      })
     },
     getHouseInfo() {
       this.loading = true
@@ -210,6 +224,7 @@ export default {
         this.house = resp.data.house;
         this.landlord = resp.data.houseUserVO;
         this.housePhotos = resp.data.photoUrlList;
+        this.isFavourite = resp.data.isFavourite;
       })
     }
   },
@@ -301,5 +316,28 @@ export default {
 
 .box-card {
   width: 400px;
+}
+
+.favourite-btn {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  text-decoration: underline;
+  height: 34px;
+  width: 80px;
+  line-height: 34px;
+  padding: 0 10px;
+  margin-top: 60px;
+  color: #333333;
+  font-size: 18px;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.favourite-btn:hover {
+  background-color: #ECECEC;
 }
 </style>

@@ -9,6 +9,8 @@
         <el-menu-item-group>
           <el-menu-item index="/home/user/info">个人资料</el-menu-item>
           <el-menu-item index="/home/user/pass">修改密码</el-menu-item>
+          <el-menu-item index="/home/house/favourites">收藏房源</el-menu-item>
+          <el-menu-item index="/home/message">消息通知</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
       <el-submenu index="2">
@@ -33,6 +35,7 @@
 </template>
 
 <script>
+
 export default {
   name: "aside-nav"
 }

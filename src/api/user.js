@@ -15,3 +15,11 @@ export function updatePassword(data){
         data:data
     })
 }
+
+export function identityAuth(data){
+    return request({
+        url:'/users/identity',
+        method:'put',
+        data:data
+    })
+}

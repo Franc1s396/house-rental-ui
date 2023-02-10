@@ -16,7 +16,9 @@ import RentableOrder from "@/views/order/rentable-order";
 import HouseList from "@/views/house/house-list";
 import HouseDetails from "@/views/house/house-details";
 import Register from "@/views/index/register";
-import PayLog from "@/views/pay/pay-log";
+import PayLog from "@/views/support/pay-log";
+import HouseFavourite from "@/views/house/house-favourite";
+import HomeMessage from "@/views/support/home-message";
 
 Vue.use(VueRouter)
 
@@ -90,6 +92,16 @@ const routes = [
                         path: '/home/pay-log',
                         name: 'pay-log',
                         component: PayLog
+                    },
+                    {
+                        path: '/home/house/favourites',
+                        name: 'house-favourite',
+                        component: HouseFavourite
+                    },
+                    {
+                        path: '/home/message',
+                        name: 'home-message',
+                        component: HomeMessage
                     }
                 ]
             },

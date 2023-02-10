@@ -42,7 +42,10 @@
           <i class="el-icon-arrow-down el-icon--right"></i>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="userInfo">资料管理</el-dropdown-item>
-            <el-dropdown-item command="createHouse">房源发布</el-dropdown-item>
+            <el-dropdown-item command="message">
+              消息通知
+              <el-badge v-if="messageCount>0" class="mark" :value="messageCount"/>
+            </el-dropdown-item>
             <el-dropdown-item command="logout" divided>注销登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -54,6 +57,7 @@
 <script>
 import store from "@/store";
 import {Message} from "element-ui";
+import {messageCount} from "@/api/support";
 
 export default {
   name: "head-nav",
@@ -64,6 +68,7 @@ export default {
         avatarUrl: '',
       },
       isLogin: false,
+      messageCount: 0,
     }
   },
   methods: {
@@ -79,14 +84,17 @@ export default {
           this.userInfo.avatarUrl = store.state.avatar
         })
         this.isLogin = true
+        this.getMessageCount();
       }
     },
     goLogin() {
       return this.$router.push('/login')
     },
     handleCommand(command) {
-      if (command==='userInfo'){
+      if (command === 'userInfo') {
         this.$router.push('/home/user/info');
+      } else if (command === 'message') {
+        this.$router.push('/home/message');
       } else if (command === 'logout') {
         this.$confirm('您确定要注销登录吗?', '提示', {
           confirmButtonText: '确定',
@@ -104,9 +112,13 @@ export default {
             message: '已取消删除'
           });
         });
-
       }
-    }
+    },
+    getMessageCount() {
+      messageCount().then(resp => {
+        this.messageCount = resp.data;
+      })
+    },
   },
   mounted() {
     this.getUserInfo()

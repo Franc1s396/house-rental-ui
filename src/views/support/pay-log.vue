@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import {payLogList} from "@/api/pay-log";
+import {payLogList} from "@/api/support";
 
 export default {
   name: "pay-log",
