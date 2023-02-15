@@ -90,9 +90,11 @@ export default {
   methods: {
     handleSizeChange(val) {
       this.queryParams.limit = val;
+      this.getPayLogList()
     },
     handleCurrentChange(val) {
       this.queryParams.page = val;
+      this.getPayLogList()
     },
     handleQuery() {
       this.getPayLogList();

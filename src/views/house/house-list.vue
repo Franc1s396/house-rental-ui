@@ -89,7 +89,7 @@
         </el-table-column>
         <el-table-column
             label="操作"
-            width="120">
+            width="150">
           <template slot-scope="scope">
             <el-button
                 v-if="scope.row.shelfStatus.name==='未上架'"
@@ -145,9 +145,11 @@ export default {
   methods: {
     handleSizeChange(val) {
       this.queryParams.limit = val;
+      this.getHouseList();
     },
     handleCurrentChange(val) {
       this.queryParams.page = val;
+      this.getHouseList();
     },
     handleQuery() {
       this.getHouseList();
@@ -163,10 +165,10 @@ export default {
       this.getHouseList()
     },
     addHouse() {
-      this.$router.push('/home/house/details');
+      this.$router.replace('/home/house/details');
     },
     viewHouseDetails(houseId) {
-      this.$router.push({
+      this.$router.replace({
         name: 'house-details',
         query: {
           houseId: houseId

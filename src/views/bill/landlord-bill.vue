@@ -135,9 +135,11 @@ export default {
   methods: {
     handleSizeChange(val) {
       this.queryParams.limit = val;
+      this.getBillList()
     },
     handleCurrentChange(val) {
       this.queryParams.page = val;
+      this.getBillList()
     },
     handleQuery() {
       this.getBillList();

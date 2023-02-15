@@ -19,6 +19,9 @@ Vue.use(Element)
 Vue.use(VueAreaLinkage)
 
 router.beforeEach((to, from, next) => {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+    window.pageYOffset = 0;
     if (to.path === '/') {
         next('/index');
     }else if (to.path === '/login') {

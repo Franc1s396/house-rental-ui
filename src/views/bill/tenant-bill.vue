@@ -118,7 +118,7 @@
         </el-table-column>
         <el-table-column
             label="操作"
-            width="100">
+            width="150">
           <template slot-scope="scope">
             <el-button
                 v-if="scope.row.payStatus.name==='未支付'"
@@ -167,9 +167,11 @@ export default {
   methods: {
     handleSizeChange(val) {
       this.queryParams.limit = val;
+      this.getBillList()
     },
     handleCurrentChange(val) {
       this.queryParams.page = val;
+      this.getBillList()
     },
     handleQuery() {
       this.getBillList();

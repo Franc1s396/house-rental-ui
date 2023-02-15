@@ -50,13 +50,15 @@ export default {
   methods: {
     handleSizeChange(val) {
       this.queryParams.limit = val;
+      this.getMessageList()
     },
     handleCurrentChange(val) {
       this.queryParams.page = val;
+      this.getMessageList()
     },
     handleReadMessage(messageId) {
       readMessage(messageId).then(resp => {
-        this.getMessageList();
+        this.$router.go(0);
       })
     },
     handleStyle(status) {

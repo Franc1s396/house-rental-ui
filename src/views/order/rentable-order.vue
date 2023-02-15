@@ -58,7 +58,7 @@
         </el-table-column>
         <el-table-column
             label="操作"
-            width="100">
+            width="150">
           <template slot-scope="scope">
             <el-button @click="collectRent(scope.row)" type="text" size="small">收租</el-button>
           </template>

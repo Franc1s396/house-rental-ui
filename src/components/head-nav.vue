@@ -39,6 +39,7 @@
         ></el-avatar>
         <el-dropdown class="userInfo" @command="handleCommand">
           <span class="el-dropdown-link">{{ userInfo.nickname }}</span>
+          <el-badge v-if="messageCount>0" is-dot class="item"/>
           <i class="el-icon-arrow-down el-icon--right"></i>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="userInfo">资料管理</el-dropdown-item>

@@ -173,9 +173,11 @@ export default {
   methods: {
     handleSizeChange(val) {
       this.queryParams.limit = val;
+      this.getHousePage()
     },
     handleCurrentChange(val) {
       this.queryParams.page = val;
+      this.getHousePage()
     },
     handleCityChange(val) {
       this.getHousePage();
@@ -223,12 +225,13 @@ export default {
       this.getHousePage()
     },
     houseInfoRoute(houseId) {
-      this.$router.push({
-        name: 'house-info',
+      let newUrl = this.$router.resolve({
+        path: '/house/info',
         query: {
           houseId: houseId
         }
-      })
+      });
+      window.open(newUrl.href, '_blank');
     }
   },
   mounted() {

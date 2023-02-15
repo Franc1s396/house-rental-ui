@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import {findOwnHousePage} from "@/api/house";
+import {favouriteHousePage} from "@/api/house";
 
 export default {
   name: "house-favourite",
@@ -89,9 +89,11 @@ export default {
   methods: {
     handleSizeChange(val) {
       this.queryParams.limit = val;
+      this.getHouseList()
     },
     handleCurrentChange(val) {
       this.queryParams.page = val;
+      this.getHouseList()
     },
     handleRouterHouse(houseId) {
       let newUrl=this.$router.resolve({
@@ -104,7 +106,7 @@ export default {
     },
     getHouseList() {
       this.loading = true;
-      findOwnHousePage(this.queryParams).then(resp => {
+      favouriteHousePage(this.queryParams).then(resp => {
         this.houseList = resp.data.records;
         this.total = resp.data.total;
         this.loading = false;
